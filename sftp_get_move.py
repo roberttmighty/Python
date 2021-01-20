@@ -5,10 +5,10 @@ import pysftp, paramiko, os, shutil, datetime
 
 #Move Variables
 YEAR = datetime.datetime.now().year
-_LOCDIR = "/psdata/focus2/"
+_LOCDIR = "source_dir"
 l_SRC_FILES=os.listdir(_LOCDIR)
-l_DEST1 ="/psdata/focus2/archive/%d/" % YEAR
-l_DEST2 ="/psdata/focus2/logs/"
+l_DEST1 ="dest_dir_1/%d/" % YEAR
+l_DEST2 ="dest_dir_2"
 _csv = ".csv"
 _log = ".log"
 
