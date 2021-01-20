@@ -6,9 +6,9 @@ import os, shutil, datetime
 #Variables
 TODAY = datetime.date.today().strftime("%Y%m%d")
 YEAR = datetime.datetime.now().year
-l_src = "source directory"
-l_dest ="destination directory/%d/" % YEAR
-_ext = ".xlsx"
+l_src = "source_directory"
+l_dest ="destination_directory/%d/" % YEAR
+_ext = "extention_you_want"
 file_name = "name_you_want" + TODAY + _ext
 
 
