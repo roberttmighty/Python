@@ -1,24 +1,15 @@
 #!/usr/bin/python3
 
-"""
-Custom SPC Script to rename and move xls from Work From Home PS Query.
-
-Last Update  : 08/24/2020 by Josh Westmoreland
-Changes Made : Removed Functions, Updated Move to use file name instead of
-               file extension.
-Next Steps   : Test
-
-"""
 #Modules
 import os, shutil, datetime
 
 #Variables
 TODAY = datetime.date.today().strftime("%Y%m%d")
 YEAR = datetime.datetime.now().year
-l_src = "/psdata/work_from_home/"
-l_dest ="/psdata/work_from_home/%d/" % YEAR
+l_src = "source directory"
+l_dest ="destination directory/%d/" % YEAR
 _ext = ".xlsx"
-file_name = "work_from_home_" + TODAY + _ext
+file_name = "name_you_want" + TODAY + _ext
 
 
 #Code Start
