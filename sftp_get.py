@@ -1,14 +1,5 @@
 #!/usr/bin/python3
 
-"""
-Custom SPC Script to move csv and log files of BN Invoice every night
-
-Last Update  : 04/29/2020 by Josh Westmoreland
-Changes Made : Created Functions, and added SFTP get and remove
-Next Steps   : Add error checking and download confirmation before remove.
-
-"""
-
 #Import  modules
 import pysftp, paramiko, os, shutil, datetime
 
@@ -22,9 +13,9 @@ _csv = ".csv"
 _log = ".log"
 
 #SFTP Connection Variables
-r_HN = "customer-ftp.focuscareer2.com"
-r_UN = "stpetersburg"
-r_PW = "fr13ndsh1p!"
+r_HN = "hostname"
+r_UN = "username"
+r_PW = "password"
 
 #Define Functions
 def s_create(folder): #Checks for destination specified in argument and if not present creates it.
