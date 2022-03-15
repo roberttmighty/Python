@@ -1,0 +1,107 @@
+#!/usr/bin/python3
+"""
+#Import Modules
+import datetime, pysftp, os, logging, time, sys
+from datetime import date
+
+#Variables and Lists
+currentDay = datetime.date.today().strftime("%Y%m%d")
+currentYear = datetime.datetime.now().year
+scriptLogDirectory = ""
+localDirectory = ""
+jclDirectory = localDirectory + "" 
+
+
+dailyFiles = ['File1', 
+            'File2',
+            'etc...']
+
+mondayFiles = ['File1', 
+            'File2',
+            'etc...']
+
+#Logger Settings
+
+logging.basicConfig(filename=scriptLogDirectory + "faster01_" + currentDay + ".log", level=logging.DEBUG,
+    format='%(asctime)s:%(levelname)s:%(funcName)s - %(message)s', datefmt='%Y-%M-%d %H:%M:%S')
+
+#SFTP Connection Variables
+
+sftp = pysftp.Connection(host=, 
+                         username=, 
+                         password=, 
+                         private_key=)
+
+#Define Functions
+
+def s_split_check():# Will check if file was created previous buisness day by compairing date modified on a file.
+    #import time, sys
+    todayString = int(currentDay)
+    modifiedTime = time.strftime('%Y%m%d', time.localtime(os.path.getmtime(localDirectory + 'file.txt')))
+    modifiedTimeString = int(modifiedTime)
+    if date.today().weekday() == 0: ## This isn't working on the 1st of the month. Need a different way to check. 
+        lastBuisnessDay = todayString - 3
+        if lastBuisnessDay != modifiedTimeString:
+            logging.error('Split Trans was not run on previous Buisness day.')
+            logging.error('Run the split and then proceed with Faster process manually.')
+            sys.exit(0)
+        else:
+            logging.info('Split Trans was run, proceding to upload the Monday files.')
+    else: 
+        lastBuisnessDay = todayString - 1
+        if lastBuisnessDay != modifiedTimeString:
+            logging.error('Split Trans was not run on previous Buisness day')
+            logging.error('Run the split and then proceed with Faster process manually.')
+            sys.exit(0)
+        else:
+            logging.info('Split Trans was run, proceding to upload the daily files.')
+
+def s_put_01():# Will upload files, additional files if it is Monday
+    try:
+        remoteInDirectory = "" # Need to add more verbose logging to this function
+        if date.today().weekday() == 0: #After upload set check remote dir for files.  Look at ccla script for how. 
+            sftp.cwd(remoteInDirectory) 
+            sftp.put(jclDirectory + "nfile1", remoteInDirectory + "nfile1")
+            sftp.put(jclDirectory + "nfile2", remoteInDirectory + "nfile2)
+            sftp.put(jclDirectory + "nfile3", remoteInDirectory + "nfile3")
+            sftp.put(jclDirectory + "nfile4", remoteInDirectory + "nfile4")
+            logging.info('Successfully uploaded Monday files.' )
+
+        else:
+            sftp.cwd(remoteInDirectory)
+            sftp.put(jclDirectory + "nfile3", remoteInDirectory + "nfile3")
+            sftp.put(jclDirectory + "nfile4", remoteInDirectory + "nfile4")
+            logging.info('Successfully uploaded Daily files.')
+        
+        logging.info("All files have been uplaoded. Waiting for 10 minutes, then proceding to download files.")
+        time.sleep(600)
+    except Exception as e:
+        logging.exception('Exception Occured, exiting script.')
+        sys.exit(1)
+        
+def s_get_01():# Will download files, additional files if it is Monday
+    remoteOutDirectory = ""
+    if date.today().weekday() == 0:
+        logging.info('Starting download of Monday files.')
+        for files in mondayFiles:
+            if os.path.isfile(localDirectory + files) == False:
+                sftp.cwd(remoteOutDirectory) #Add wait before starting loop over. 
+                sftp.get(remoteOutDirectory + files, localDirectory + files.lower())
+                logging.info('Successfully downloaded file ' + files)
+            else:
+                logging.info('All Monday files have been successfully downloaded.')
+
+    else:
+        logging.info('Starting download of Daily files.')
+        for files in dailyFiles:
+            if os.path.isfile(localDirectory + files) == False:
+                sftp.cwd(remoteOutDirectory)
+                sftp.get(remoteOutDirectory + files, localDirectory + files.lower())
+                logging.info('Successfully downloaded file ' + files)
+            else:
+                logging.info('All daily files have been successfully downloaded.')
+
+#Start Script
+s_split_check()
+s_put_01()
+s_get_01()
